@@ -1,0 +1,39 @@
+name: Compare CSV Files
+
+on:
+  push:
+    paths:
+      - 'csv_files/**/*.csv'
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install pandas
+
+      - name: List files for debugging
+        run: ls -R
+
+      - name: Run CSV comparison
+        run: |
+          echo "Running CSV comparison script..."
+          python compare_csv.py
+
+      - name: Show comparison result
+        run: cat comparison_output.txt
+
+      - name: Upload comparison result
+        uses: actions/upload-artifact@v3
+        with:
+          name: comparison-output
+          path: comparison_output.txt
